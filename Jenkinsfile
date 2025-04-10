@@ -36,8 +36,15 @@ pipeline {
                                                                                 }
 
                     }
+                      post{
+                always{
+                pitmutation mutationStatsFile: '**/target/pit-reports/**/mutations.xml'
+                      }
+                          }
+
                                             }
                       // fin stage 3
+
               stage('Vulnerability Scan - Docker') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
