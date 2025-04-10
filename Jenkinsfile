@@ -13,9 +13,19 @@ pipeline {
                 stage('test unitaire ') {
                     steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                           sh "mvn test"                                         }
+                           sh "mvn test"                                        
+                                                                                 }
                       
                           }
+                            post{
+                          always{
+                            junit 'target/surefire-reports/*.xml'
+                          
+                          }
+                        }
+
+
+
                                         }
                   // fin stage 2
             
@@ -24,10 +34,30 @@ pipeline {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
                         sh "mvn org.pitest:pitest-maven:mutationCoverage"
                                                                                 }
-                
+
                     }
                                             }
                       // fin stage 3
+              stage('Vulnerability Scan - Docker') {
+            steps {
+              catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                sh "mvn dependency-check:check"
+              }
+            }
+            post{
+              always{
+               dependencyCheckPublisher pattern: 'target/dependency-check-report.xml'
+                jacoco(execPattern: 'target/jacoco.exec')
+              }
+            }
+           }
+
+
+
+
+
+
+                      // fin stage 4
 
               stage('Docker Build and Push') {
                     steps {
@@ -40,7 +70,7 @@ pipeline {
  
                          }
                                               }
-                      // fin stage 4
+                      // fin stage 5
               stage('Deployment Kubernetes') {
                   steps {
                   withKubeConfig([credentialsId: 'KuberneteThib']) {
@@ -49,7 +79,7 @@ pipeline {
                                                             }
                     }
                     }
-                    // fin stage 5
+                    // fin stage 6
 
 
 
