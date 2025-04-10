@@ -36,7 +36,7 @@ public class NumericController {
 			if (value > 50) {
 				message = "Plus grand que 50";
 			} else {
-				message = "Plus petit que 50";
+				message = "Plus petit ou égale à 50";
 			}
 			return message;
 		}

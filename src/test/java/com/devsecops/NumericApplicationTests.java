@@ -37,13 +37,13 @@ public class NumericApplicationTests {
     @Test
     public void smallerThanOrEqualToFiftyMessage() throws Exception {
         this.mockMvc.perform(get("/compare/49")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string("Plus grand que 50"));
+                .andExpect(content().string("Plus petit ou égale à 50"));
     }
 
     @Test
     public void greaterThanFiftyMessage() throws Exception {
         this.mockMvc.perform(get("/compare/51")).andDo(print()).andExpect(status().isOk())
-                .andExpect(content().string("Plus petit que 50"));
+                .andExpect(content().string("Plus grand que 50"));
     }
     
     @Test
