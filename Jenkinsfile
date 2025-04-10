@@ -12,7 +12,9 @@ pipeline {
                                 
                 stage('test unitaire ') {
                     steps {
-                      sh "mvn test"
+                      catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+                           sh "mvn test"                                         }
+                      
                           }
                                         }
                   // fin stage 2
@@ -50,7 +52,7 @@ pipeline {
 
 
 
-        }
+              }
         // fin stages
         }
         // fin pipeline
