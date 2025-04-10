@@ -9,5 +9,10 @@ pipeline {
             }
         }   
     }
+      stage('test unitaire ') {
+            steps {
+              sh "mvn test"
+            
+            }
+        }
 }
-// ezrfgdfgzer
