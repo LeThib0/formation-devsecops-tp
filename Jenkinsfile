@@ -26,16 +26,38 @@ pipeline {
 
               stage('Docker Build and Push') {
                     steps {
-        withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD_', variable: 'DOCKER_HUB_PASSWORD')]) {
-          sh 'sudo docker login -u thib432 -p $DOCKER_HUB_PASSWORD'
-          sh 'printenv'
-          sh 'sudo docker build -t thib432/devops-app:""$GIT_COMMIT"" .'
-          sh 'sudo docker push thib432/devops-app:""$GIT_COMMIT""'
+                    withCredentials([string(credentialsId: 'DOCKER_HUB_PASSWORD_', variable: 'DOCKER_HUB_PASSWORD')]) {
+                    sh 'sudo docker login -u thib432 -p $DOCKER_HUB_PASSWORD'
+                    sh 'printenv'
+                    sh 'sudo docker build -t thib432/devops-app:""$GIT_COMMIT"" .'
+                    sh 'sudo docker push thib432/devops-app:""$GIT_COMMIT""'
                                                                                                          }
  
                          }
                                               }
                       // fin stage 4
+              stage('Deployment Kubernetes  ') {
+                  steps {
+                  withKubeConfig([credentialsId: 'kubeconfig']) {
+                  sh "sed -i 's#replace#thib432/devops-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+                  sh "kubectl apply -f k8s_deployment_service.yaml"
+                                                            }
+                    }
+ 
+                                              }
+              stage('Deployment Kubernetes  ') {
+                  steps {
+                  withKubeConfig([credentialsId: 'kubeconfig']) {
+                  sh "sed -i 's#replace#thib432/devops-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
+                  sh "kubectl apply -f k8s_deployment_service.yaml"
+                                                                }
+                        }
+                                              }
+                    // fin stage 5
+
+
+
+
 
         }
         // fin stages
