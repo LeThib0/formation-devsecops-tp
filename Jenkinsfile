@@ -38,7 +38,7 @@ pipeline {
                       // fin stage 4
               stage('Deployment Kubernetes') {
                   steps {
-                  withKubeConfig([credentialsId: 'kubeconfig']) {
+                  withKubeConfig([credentialsId: 'KuberneteThib']) {
                   sh "sed -i 's#replace#thib432/devops-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
                   sh "kubectl apply -f k8s_deployment_service.yaml"
                                                             }
@@ -47,7 +47,7 @@ pipeline {
                                               }
               stage('Deployment Kubernetes') {
                   steps {
-                  withKubeConfig([credentialsId: 'kubeconfig']) {
+                  withKubeConfig([credentialsId: 'KuberneteThib']) {
                   sh "sed -i 's#replace#thib432/devops-app:${GIT_COMMIT}#g' k8s_deployment_service.yaml"
                   sh "kubectl apply -f k8s_deployment_service.yaml"
                                                                 }
