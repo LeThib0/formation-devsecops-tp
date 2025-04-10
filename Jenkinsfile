@@ -45,6 +45,8 @@ pipeline {
                                             }
                       // fin stage 3
 
+              
+              
               stage('Vulnerability Scan - Docker') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
@@ -58,11 +60,6 @@ pipeline {
               }
             }
            }
-
-
-
-
-
 
                       // fin stage 4
 
