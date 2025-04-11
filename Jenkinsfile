@@ -48,12 +48,13 @@ pipeline {
       stage('scan sonarqube') {
               steps {
  
-            withCredentials([string(credentialsId: 'sonar', variable: 'sonar')]) {
+            withCredentials([string(credentialsId: 'sonar', variable: 'sonar')])
+            withCredentials([string(credentialsId: 'nom', variable: 'nom')]) {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
  
           sh "sudo mvn clean verify sonar:sonar \
-          -Dsonar.projectKey=appjava \
-          -Dsonar.projectName='appjava' \
+          -Dsonar.projectKey=$nom  \
+          -Dsonar.projectName='$nom' \
           -Dsonar.host.url=http://formationthibaut.eastus.cloudapp.azure.com:9980 \
           -Dsonar.token=$sonar"
  
