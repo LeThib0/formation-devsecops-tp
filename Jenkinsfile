@@ -75,6 +75,8 @@ pipeline {
                          }
                                               }
                       // fin stage 5
+
+                      
               stage('Deployment Kubernetes') {
                   steps {
                   withKubeConfig([credentialsId: 'KuberneteThib']) {
