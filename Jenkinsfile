@@ -4,7 +4,7 @@ pipeline {
       stages {
               stage('Build Artifact') {
                     steps {
-                      sh "mvn clean package -DskipTests=true"
+                      sh "sudo mvn clean package -DskipTests=true"
                       archive 'target/*.jar' 
                     }
                                       }  
@@ -27,12 +27,12 @@ pipeline {
 
 
                                         }
-                  // fin stage 2
+                  // fin stage test unitaire
             
               stage('Mutation Tests - PIT') {
               steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                        sh "mvn org.pitest:pitest-maven:mutationCoverage"
+                        sh "sudo mvn org.pitest:pitest-maven:mutationCoverage"
                                                                                 }
 
                     }
@@ -43,14 +43,39 @@ pipeline {
                           }
 
                                             }
-                      // fin stage 3
+                      // fin stage Mutation
+
+      stage('scan sonarqube') {
+              steps {
+ 
+            withCredentials([string(credentialsId: 'sonar', variable: 'sonar')]) {
+                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+ 
+          sh "sudo mvn clean verify sonar:sonar \
+          -Dsonar.projectKey=appjava \
+          -Dsonar.projectName='appjava' \
+          -Dsonar.host.url=http://formationthibaut.eastus.cloudapp.azure.com:9980 \
+          -Dsonar.token=$sonar"
+ 
+ 
+                }
+              }
+            }
+            
+        
+            }
+ 
+
+
+
+
 
               
               
               stage('Vulnerability Scan - Docker') {
             steps {
               catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                sh "mvn dependency-check:check"
+                sh "sudo mvn dependency-check:check"
               }
             }
             post{
@@ -61,7 +86,7 @@ pipeline {
             }
            }
 
-                      // fin stage 4
+                      // fin stage Vulnerability
 
               stage('Docker Build and Push') {
                     steps {
@@ -74,9 +99,8 @@ pipeline {
  
                          }
                                               }
-                      // fin stage 5
+                      // fin stage Docker Build
 
-                      
               stage('Deployment Kubernetes') {
                   steps {
                   withKubeConfig([credentialsId: 'KuberneteThib']) {
