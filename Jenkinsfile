@@ -8,7 +8,7 @@ pipeline {
                       archive 'target/*.jar' 
                     }
                                       }  
-                  // fin stage 1
+                  // fin stage artifact
                                 
                 stage('test unitaire ') {
                     steps {
@@ -48,8 +48,7 @@ pipeline {
       stage('scan sonarqube') {
               steps {
  
-            withCredentials([string(credentialsId: 'sonar', variable: 'sonar')])
-            withCredentials([string(credentialsId: 'nom', variable: 'nom')]) {
+            withCredentials([string(credentialsId: 'sonar', variable: 'sonar'),string(credentialsId: 'nom', variable: 'nom')]) {
                 catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
  
           sh "sudo mvn clean verify sonar:sonar \
@@ -62,10 +61,8 @@ pipeline {
                 }
               }
             }
-            
-        
             }
- 
+                  // fin stage sonarqube
 
 
 
@@ -110,7 +107,7 @@ pipeline {
                                                             }
                     }
                     }
-                    // fin stage 6
+                    // fin stage Kubernetes
 
 
 
