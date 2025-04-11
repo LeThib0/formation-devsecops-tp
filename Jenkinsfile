@@ -13,7 +13,7 @@ pipeline {
                 stage('test unitaire ') {
                     steps {
                       catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                           sh "mvn test"                                        
+                           sh "sudo mvn test"                                        
                                                                                  }
                       
                           }
